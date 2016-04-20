@@ -1,4 +1,4 @@
-//Assignment 3 - Image header file
+//Assignment 3 - image header file
 //20 April, 2016
 //Dean de Haast
 
@@ -33,7 +33,25 @@ namespace DHSDEA001 {
 			~Image();
 
 			//method headers
-			void loadImage(std::string imageName);
-			void saveImage(std::string imageName);
-	};
+			void load(std::string fileName);
+			void save(std::string fileName);
+	
+			//Iterator class
+			class iterator {
+				private:
+					unsigned char *ptr;
+					// construct only via Image class (begin/end)
+					iterator(u_char *p) : ptr(p) {}
+
+				public:					
+					//copy construct is public
+					iterator( const iterator & rhs) : ptr(rhs.ptr) {}
+
+					iterator & operator=(const iterator & rhs) {}	
+
+			}; 
+	}; 
+
 }
+
+#endif

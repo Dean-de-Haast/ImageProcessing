@@ -1,0 +1,47 @@
+/**
+*Driver file Assignment 4
+*20 April, 2016
+*Author: Shivam Ragoonaden
+*/
+
+#include "image.h" //"image.h"
+
+using namespace std;
+using namespace DHSDEA001;
+
+int main (int argc, char *argv[]){
+	string option = argv[1];
+	string image1 = argv[2];
+	string image2;
+	string outputImage;
+
+	//Image img;
+
+	//img.readImage(image1);
+
+	if (option == "-a") { //Addition
+		image2 = argv[4];
+		outputImage = argv[5];
+	}
+
+	else if (option == "-s") { //Subtraction
+		image2 = argv[4];
+		outputImage = argv[5];
+	}
+
+	else if (option == "-i") { //
+		outputImage = argv[4];
+	}
+
+	else if (option == "-l") { //
+		image2 = argv[4];
+		outputImage = argv[5];
+	}	
+	
+	else if (option == "-t") {  //
+		outputImage = argv[5];
+		int val = atoi(argv[4]);
+	}
+
+	return 0;
+}

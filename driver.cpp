@@ -3,8 +3,9 @@
 //Dean de Haast
 
 
-#include "Image.h"
+#include "image.h"
 #include <memory>
+
 
 using namespace std;
 using namespace DHSDEA001;
@@ -12,7 +13,8 @@ using namespace DHSDEA001;
 
 
  int main (int argc, char *argv[]){
- 	string operation = argv[1];
+
+	string operation = argv[1];
 	string inputFile1;
 	string inputFile2;
 	string outputFile = argv[4];
@@ -44,4 +46,4 @@ using namespace DHSDEA001;
 		
 	}
 	return 0;
- }
+}
