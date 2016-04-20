@@ -49,6 +49,17 @@ using namespace std;
 			
 		parts >> height >> width >> ws;	
 		file.close();	
-		
+
 		cout<<"THE HEIGHT IS: "<<height<<"THE WIDTH IS "<<width;
+	}
+
+	void Image:: save(string fileName){
+		
+		ofstream outFile(fileName);
+
+		if(!outFile){
+			cerr << "File open failed!";
+		}
+		outFile<< height<<" "<<width<<endl;
+		outFile.write((char *) data.get(), height*width);
 	}

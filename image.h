@@ -39,11 +39,9 @@ namespace DHSDEA001 {
 			class iterator {
 				private:
 					unsigned char *ptr;
-					// construct only via Image class (begin/end)
 					iterator(u_char *p) : ptr(p) {}
 
 				public:					
-					//copy construct is public
 					iterator( const iterator & rhs) : ptr(rhs.ptr) {}
 
 					iterator & operator=(const iterator & rhs) {}	
