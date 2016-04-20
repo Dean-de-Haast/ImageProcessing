@@ -20,5 +20,20 @@ namespace DHSDEA001 {
 			std::unique_ptr<unsigned char[]> data;
 
 		public:
+			//default constructor
+			Image();
+
+			//copy constructor
+			Image(const Image& image);
+
+			//move constructor
+			Image(Image&& image);
+
+			//destructor
+			~Image();
+
+			//method headers
+			void loadImage(std::string imageName);
+			void saveImage(std::string imageName);
 	};
 }
