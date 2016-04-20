@@ -17,31 +17,40 @@ using namespace DHSDEA001;
 	string operation = argv[1];
 	string inputFile1;
 	string inputFile2;
-	string outputFile = argv[4];
+	string outputFile;
 
 	Image im;
-
 	if (operation == "-a"){
 		inputFile1 = argv[2];
 		inputFile2 = argv[3];
+		outputFile = argv[4];
+		im.load(inputFile1);
 		//im.addOperation();
 
 	}else if (operation == "-s"){
 		inputFile1 = argv[2];
 		inputFile2 = argv[3];
+		outputFile = argv[4];
+		im.load(inputFile1);
 		//im.subtractOperation();
 
 	}else if (operation == "-i"){
 		inputFile1 = argv[2];
+		outputFile = argv[3];
+		im.load(inputFile1);
 		//im.invertOperation();
 
 	}else if (operation == "-l"){
 		inputFile1 = argv[2];
 		inputFile2 = argv[3];
+		outputFile = argv[4];
+		im.load(inputFile1);
 		//im.maskOperation();
 		
 	}else if (operation == "-t"){
 		inputFile1 = argv[2];
+		outputFile = argv[3];
+		im.load(inputFile1);
 		//im.thresholdOperation();
 		
 	}

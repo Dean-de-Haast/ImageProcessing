@@ -6,6 +6,7 @@
 #include "image.h"
 
 using namespace DHSDEA001;
+using namespace std;
 
 	//constructor(s)
 	Image::Image() {
@@ -28,6 +29,26 @@ using namespace DHSDEA001;
 	Image::~Image() {}
 
 	//method headers and definitions
-	void Image::load(std::string imageName) {
+	void Image::load(string fileName) {
+		//Reading in from the file:
+		string str;
+
+		ifstream file(fileName);
+		if(!file){
+			cerr << "File open failed!";
+		}
+		//Get rid of the first line.
+		getline(file,str);
+		//Get the next line, the first of the comment lines.
+		getline(file,str);
+		while(str[0] == '#'){
+			getline(file,str);
+		}
+		
+		stringstream parts(str);
 			
+		parts >> height >> width >> ws;	
+		file.close();	
+		
+		cout<<"THE HEIGHT IS: "<<height<<"THE WIDTH IS "<<width;
 	}
