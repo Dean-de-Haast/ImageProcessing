@@ -15,7 +15,6 @@ namespace DHSDEA001 {
 
 	class Image {
 		private:
-			//variables
 			int width, height;
 			std::unique_ptr<unsigned char[]> data;
 
