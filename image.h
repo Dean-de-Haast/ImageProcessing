@@ -23,10 +23,10 @@ namespace DHSDEA001 {
 			Image();
 
 			//copy constructor
-			Image(const Image& image);
+			Image(const Image& i);
 
 			//move constructor
-			Image(Image&& image);
+			Image(Image&& i);
 
 			//destructor
 			~Image();
@@ -34,6 +34,10 @@ namespace DHSDEA001 {
 			//method headers
 			void load(std::string fileName);
 			void save(std::string fileName);
+
+			//Overiding the operators
+			//Addition.
+			Image& operator+(const Image& image);
 	
 			//Iterator class
 			class iterator {
