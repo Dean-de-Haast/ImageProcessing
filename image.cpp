@@ -59,7 +59,22 @@ using namespace std;
 		stringstream parts(str);
 		//Read in all of the bytes into  the char array.	
 		parts >> height >> width >> ws;	
+
+		//Skip the line ith 255 on it.
+		getline(file,str);
 		
+		//Reading in the data..
+		//Creating a new unsigned char array pointer.
+		unique_ptr<unsigned char []> temp(new unsigned char [height*width]);
+		
+		//Adds each piece of binary data to the array.
+
+		//****************************************MIGHT HAVE TO CHANGE THIS TO USING AN INTERATOR_ CURRENTLY USING A LIBRARY.
+		for (int i = 0; i < width*height; i++){
+        	file.read((char *) temp.get(), height*width);
+		}
+        //data = std::move(temp);
+
 		file.close();	
 
 		cout<<"THE HEIGHT IS: "<<height<<"THE WIDTH IS "<<width;
@@ -73,7 +88,10 @@ using namespace std;
 			cerr << "File open failed!";
 		}
 		outFile<< height<<" "<<width<<endl;
-		outFile.write((char *) data.get(), height*width);
+		//****************************************MIGHT HAVE TO CHANGE THIS TO USING AN INTERATOR_ CURRENTLY USING A LIBRARY.
+		for (int i = 0; i < width*height; i++){
+        	outFile.write((char *) data.get(), height*width);
+		}
 	}
 
 	//Overiding the  + operator to allow the addition of images.
@@ -85,8 +103,8 @@ using namespace std;
             	int imageTemp = (int)(image.data.get()[i]);
                 int tempAddition = currentTemp + imageTemp;
 
-                if (temp <255){
-                	data.get()[i] = u_char(temp);
+                if (tempAddition <255){
+                	data.get()[i] = u_char(tempAddition);
                 }else{
                 	data.get()[i] =u_char(255);
                 } 
