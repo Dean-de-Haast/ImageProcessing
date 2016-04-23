@@ -183,7 +183,6 @@ using namespace std;
         	*beg= u_char(255 - *beg);
 
         	++beg; 
-        	++inStart; 
         } 
         return *this;
     }
@@ -219,6 +218,7 @@ using namespace std;
             }else{
             	*beg = 0;	
             } 
+            ++beg; 
         }
         return *this;
     }
