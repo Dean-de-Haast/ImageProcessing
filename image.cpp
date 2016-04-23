@@ -129,11 +129,7 @@ using namespace std;
 
             while ( beg != end){ 
 
-               	
-            	
-            	// int currentTemp = (int)((data.get())[i]);
-            	// int imageTemp = (int)(image.data.get()[i]);
-                int tempAddition = *beg + *inStart;//currentTemp + imageTemp;
+                int tempAddition = *beg + *inStart;
 
                 if (tempAddition <255){
                 	*beg = u_char(tempAddition);
@@ -155,29 +151,39 @@ using namespace std;
 
     //Overiding the  + operator to allow the addition of images.
 	Image& Image::operator-(const Image& image){
+
+		Image::iterator beg = this->begin(), end = this->end();
+		Image::iterator inStart = image.begin(), inEnd = image.end();
 		//Check whether the width of both images are the same.
 		//Use the iterator instead of this.
 		if(height ==image.height && width == image.width){
-            for (int i = 0; i < width*height; i++){
-            	int currentTemp = (int)((data.get())[i]);
-            	int imageTemp = (int)(image.data.get()[i]);
-                int tempAddition = currentTemp - imageTemp;
 
-                if (tempAddition > 0){
-                	data.get()[i] = u_char(tempAddition);
+			while ( beg != end){ 
+
+                int tempAddition = *beg - *inStart;
+
+                if (tempAddition >0){
+                	*beg = u_char(tempAddition);
                 }else{
-                	data.get()[i] =u_char(0);
+                	*beg =u_char(0);
                 } 
+
+                ++beg; 
+            	++inStart; 
             }
         }
         return *this;
     }
 
     Image& Image::operator!(){
-    	int temp;
-        for (int i = 0; i < width*height; i++){
-        	temp = (int)(data.get()[i]);
-        	data.get()[i]= u_char(255 - temp);
+
+    	Image::iterator beg = this->begin(), end = this->end();
+
+        while ( beg != end){
+        	*beg= u_char(255 - *beg);
+
+        	++beg; 
+        	++inStart; 
         } 
         return *this;
     }
@@ -185,24 +191,33 @@ using namespace std;
     //***************************************************
     Image& Image::operator/(const Image& image){
 
-        if(width == image.width && height==image.height){
-	        for (int i = 0; i < image.width*image.height; i++){
+    	Image::iterator beg = this->begin(), end = this->end();
+		Image::iterator inStart = image.begin(), inEnd = image.end();
 
-	        	if(((int)(image.data.get()[i]))!=255){
-	        		image.data.get()[i] = u_char(0);		
-	        	}   	
+        if(width == image.width && height==image.height){
+	        while ( beg != end){
+
+	        	if(*beg!=255){
+	        		*beg = u_char(0);		
+	        	}   
+
+	        	++beg; 
+            	++inStart; 	
 	        }
         } 
         return *this;
     }
     //*************************************************
     Image& Image::operator*(int f){
-        for (int i = 0; i < width*height; i++){
 
-            if((int)((data.get())[i]) > f){
-            	data.get()[i] = u_char(255);
+    	Image::iterator beg = this->begin(), end = this->end();
+
+        while ( beg != end){
+
+            if(*beg > f){
+            	*beg = u_char(255);
             }else{
-            	data.get()[i] = 0;	
+            	*beg = 0;	
             } 
         }
         return *this;

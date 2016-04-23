@@ -85,16 +85,12 @@ namespace DHSDEA001 {
 
 					//!=
 					bool operator!=(const iterator & rhs) {
-						if (ptr != rhs.ptr){
-							return true;
-						}else return false;
+						return (ptr != rhs.ptr);
 					}
 
 					//==
 					bool operator ==(const iterator & rhs){
-						if (ptr == rhs.ptr){
-							return true;
-						}else return false;
+						return (ptr == rhs.ptr);
 					}
 
 			}; 
