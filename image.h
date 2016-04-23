@@ -23,7 +23,7 @@ namespace DHSDEA001 {
 			Image();
 
 			//copy constructor
-			Image(const Image& i);
+			Image(const Image& i); 
 
 			//move constructor
 			Image(Image&& i);
@@ -52,6 +52,9 @@ namespace DHSDEA001 {
 	
 			//Iterator class
 			class iterator {
+				//Doesn't work without the friend part..
+
+				friend class Image;
 				private:
 					unsigned char *ptr;
 					iterator(u_char *p) : ptr(p) {}
@@ -66,26 +69,43 @@ namespace DHSDEA001 {
 					}	
 
 					//overide ++ operator.
-					iterator& operator++(const iterator & rhs) {
-						
+					void operator++() {
+						++ptr;
 					}
 
 					//overide -- operator.
-					iterator& operator--(const iterator & rhs) {
-						
+					void operator--() {
+						--ptr;
 					}
 
 					//overide * operator.
-					iterator& operator*(const iterator & rhs) {
-						
+					unsigned char & operator*() {
+						return *ptr;
 					}
 
-				nd_vector operator ++(int i){
-					nd_vector dataCopy = *this;
-					for 
-				}
+					//!=
+					bool operator!=(const iterator & rhs) {
+						if (ptr != rhs.ptr){
+							return true;
+						}else return false;
+					}
+
+					//==
+					bool operator ==(const iterator & rhs){
+						if (ptr == rhs.ptr){
+							return true;
+						}else return false;
+					}
 
 			}; 
+
+			iterator begin(void) const{
+				return iterator(data.get());
+			} 
+
+			iterator end(void) const{
+				return iterator(data.get()+ (width*height));
+			} 
 	}; 
 
 }

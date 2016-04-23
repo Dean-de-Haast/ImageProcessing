@@ -23,6 +23,12 @@ using namespace std;
         data = std::move(temp);
 
         //Change the data for each entry, ie like a for loop but with iterators.
+        Image::iterator beg = this->begin(), end = this->end();
+		Image::iterator inStart = i.begin(), inEnd = i.end();
+
+		while ( beg != end){
+			*beg = *inStart; ++beg; ++inStart;
+		} 
     }
 
 	//move constructor
@@ -112,21 +118,38 @@ using namespace std;
 
 	//Overiding the  + operator to allow the addition of images.
 	Image& Image::operator+(const Image& image){
+
+		Image::iterator beg = this->begin(), end = this->end();
+		Image::iterator inStart = image.begin(), inEnd = image.end();
 		//Check whether the width of both images are the same.
 		//Use the iterator instead of this.
 		if(height ==image.height && width == image.width){
-            for (int i = 0; i < width*height; i++){
-            	int currentTemp = (int)((data.get())[i]);
-            	int imageTemp = (int)(image.data.get()[i]);
-                int tempAddition = currentTemp + imageTemp;
+            //for (int i = 0; i < width*height; i++){
+
+
+            while ( beg != end){ 
+
+               	
+            	
+            	// int currentTemp = (int)((data.get())[i]);
+            	// int imageTemp = (int)(image.data.get()[i]);
+                int tempAddition = *beg + *inStart;//currentTemp + imageTemp;
 
                 if (tempAddition <255){
-                	data.get()[i] = u_char(tempAddition);
+                	*beg = u_char(tempAddition);
                 }else{
-                	data.get()[i] =u_char(255);
+                	*beg =u_char(255);
                 } 
+
+                ++beg; 
+            	++inStart; 
             }
         }
+
+        
+
+		
+
         return *this;
     }
 
