@@ -31,6 +31,9 @@ namespace DHSDEA001 {
 			//destructor
 			~Image();
 
+			//Method which calls addition 
+			Image& add(Image& image);
+
 			//method headers
 			void load(std::string fileName);
 			void save(std::string fileName);
@@ -38,6 +41,14 @@ namespace DHSDEA001 {
 			//Overiding the operators
 			//Addition.
 			Image& operator+(const Image& image);
+			//Subtraction.
+			Image& operator-(const Image& image);
+			//Addition.
+			Image& operator!();
+			//Mask.
+			Image& operator/(const Image& image);
+			//Threshold.
+			Image& operator*(int f);
 	
 			//Iterator class
 			class iterator {
@@ -45,10 +56,34 @@ namespace DHSDEA001 {
 					unsigned char *ptr;
 					iterator(u_char *p) : ptr(p) {}
 
-				public:					
+				public:		
+					//Copy constructor			
 					iterator( const iterator & rhs) : ptr(rhs.ptr) {}
 
-					iterator & operator=(const iterator & rhs) {}	
+					//overide = operator.
+					iterator& operator=(const iterator & rhs) {
+
+					}	
+
+					//overide ++ operator.
+					iterator& operator++(const iterator & rhs) {
+						
+					}
+
+					//overide -- operator.
+					iterator& operator--(const iterator & rhs) {
+						
+					}
+
+					//overide * operator.
+					iterator& operator*(const iterator & rhs) {
+						
+					}
+
+				nd_vector operator ++(int i){
+					nd_vector dataCopy = *this;
+					for 
+				}
 
 			}; 
 	}; 

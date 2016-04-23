@@ -36,7 +36,11 @@ using namespace std;
 	}
 
 	//destructor
-	Image::~Image() {}
+	Image::~Image() {
+		data = NULL;
+		height = 0;
+		width = 0;
+	}
 
 
 	void Image::load(string fileName) {
@@ -73,11 +77,17 @@ using namespace std;
 		for (int i = 0; i < width*height; i++){
         	file.read((char *) temp.get(), height*width);
 		}
-        //data = std::move(temp);
+
+        data = std::move(temp);
+
+        //Printing out the input.
+  //       for (int i = 0; i < width*height; i++){
+  //       	cout<<data.get()[i]<<endl;
+		// }
 
 		file.close();	
 
-		cout<<"THE HEIGHT IS: "<<height<<"THE WIDTH IS "<<width;
+		//cout<<"THE HEIGHT IS: "<<height<<"THE WIDTH IS "<<width;
 	}
 
 	void Image::save(string fileName){
@@ -87,17 +97,24 @@ using namespace std;
 		if(!outFile){
 			cerr << "File open failed!";
 		}
+		outFile<<"P5"<<endl;
+		outFile<<"# This is a comment"<<endl;
 		outFile<< height<<" "<<width<<endl;
+		outFile<<"255"<<endl;
+
 		//****************************************MIGHT HAVE TO CHANGE THIS TO USING AN INTERATOR_ CURRENTLY USING A LIBRARY.
-		for (int i = 0; i < width*height; i++){
-        	outFile.write((char *) data.get(), height*width);
-		}
+    	outFile.write((char *) data.get(), height*width);
 	}
+
+	// Image& Image::add(Image& image){
+	// 	return this+image;
+	// }
 
 	//Overiding the  + operator to allow the addition of images.
 	Image& Image::operator+(const Image& image){
 		//Check whether the width of both images are the same.
 		//Use the iterator instead of this.
+		if(height ==image.height && width == image.width){
             for (int i = 0; i < width*height; i++){
             	int currentTemp = (int)((data.get())[i]);
             	int imageTemp = (int)(image.data.get()[i]);
@@ -109,5 +126,61 @@ using namespace std;
                 	data.get()[i] =u_char(255);
                 } 
             }
+        }
+        return *this;
+    }
+
+    //Overiding the  + operator to allow the addition of images.
+	Image& Image::operator-(const Image& image){
+		//Check whether the width of both images are the same.
+		//Use the iterator instead of this.
+		if(height ==image.height && width == image.width){
+            for (int i = 0; i < width*height; i++){
+            	int currentTemp = (int)((data.get())[i]);
+            	int imageTemp = (int)(image.data.get()[i]);
+                int tempAddition = currentTemp - imageTemp;
+
+                if (tempAddition > 0){
+                	data.get()[i] = u_char(tempAddition);
+                }else{
+                	data.get()[i] =u_char(0);
+                } 
+            }
+        }
+        return *this;
+    }
+
+    Image& Image::operator!(){
+    	int temp;
+        for (int i = 0; i < width*height; i++){
+        	temp = (int)(data.get()[i]);
+        	data.get()[i]= u_char(255 - temp);
+        } 
+        return *this;
+    }
+    
+    //***************************************************
+    Image& Image::operator/(const Image& image){
+
+        if(width == image.width && height==image.height){
+	        for (int i = 0; i < image.width*image.height; i++){
+
+	        	if(((int)(image.data.get()[i]))!=255){
+	        		image.data.get()[i] = u_char(0);		
+	        	}   	
+	        }
+        } 
+        return *this;
+    }
+    //*************************************************
+    Image& Image::operator*(int f){
+        for (int i = 0; i < width*height; i++){
+
+            if((int)((data.get())[i]) > f){
+            	data.get()[i] = u_char(255);
+            }else{
+            	data.get()[i] = 0;	
+            } 
+        }
         return *this;
     }
