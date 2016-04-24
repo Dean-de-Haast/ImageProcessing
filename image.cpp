@@ -38,17 +38,18 @@ using namespace std;
         data = std::move(i.data);
         i.width = 0;
         i.height = 0;
+        i.data = nullptr;
 		
 	}
 
 	//destructor
 	Image::~Image() {
-		data = NULL;
+		data = nullptr;
 		height = 0;
 		width = 0;
 	}
 
-
+	//Copy assignment operator
 	Image& Image::operator=(const Image& other){
 
 		Image::iterator beg = this->begin(), end = this->end();
@@ -60,39 +61,49 @@ using namespace std;
         std::unique_ptr<unsigned char []> temp (new unsigned char[other.width*other.height]);
 
         data = std::move(temp);
+
+       // USING ITERATORS
         while (beg != end){
-        	*beg=*inStart;
+        	int temp =*inStart;
+        	++beg;
+        	++inStart;
         }
+
+
         return *this;
     }
     
+    //Assignment move operator
     Image& Image::operator=(Image&& other){
-
-    	Image::iterator beg = this->begin(), end = this->end();
+       	Image::iterator beg = this->begin(), end = this->end();
 		Image::iterator inStart = other.begin(), inEnd = other.end();
 
         height = other.height;
         data = std::move(other.data);
+
         other.width = 0;
         other.height = 0;
+        other.data = nullptr;
         return *this;
     }
 
 
-
+    //Reading in from the file
 	void Image::load(string fileName) {
-		//Reading in from the file
-
+		
+		//Checks if file can be opened.
 		ifstream file(fileName);
 		if(!file){
 			cerr << "File open failed!";
 		}
+		//Loads the file, using the overiden >> operator.
 		file >> *this;
 		
 
 		file.close();	
 	}
 
+	//Saving the image to a file.
 	void Image::save(string fileName){
 
 		ofstream outFile(fileName);
@@ -100,7 +111,7 @@ using namespace std;
 		if(!outFile){
 			cerr << "File open failed!";
 		}
-
+		//Saves the file, using the overiden << operator.
 		outFile<< *this;
 
 		outFile.close();
@@ -116,13 +127,11 @@ using namespace std;
 		//Check whether the width of both images are the same.
 		//Use the iterator instead of this.
 		if(height ==image.height && width == image.width){
-            //for (int i = 0; i < width*height; i++){
-
 
             while ( beg != end){ 
 
                 int tempAddition = *beg + *inStart;
-
+                //if the value is more than 255 then  set it to 255 else set it to the addition of both images.
                 if (tempAddition <255){
                 	*beg = u_char(tempAddition);
                 }else{
@@ -143,13 +152,13 @@ using namespace std;
 		Image::iterator beg = this->begin(), end = this->end();
 		Image::iterator inStart = image.begin(), inEnd = image.end();
 		//Check whether the width of both images are the same.
-		//Use the iterator instead of this.
+		
 		if(height ==image.height && width == image.width){
 
 			while ( beg != end){ 
 
                 int tempAddition = *beg - *inStart;
-
+                //Subtract the value if the total is bigger than 0 else set it to 0.
                 if (tempAddition >0){
                 	*beg = u_char(tempAddition);
                 }else{
@@ -169,6 +178,7 @@ using namespace std;
     	Image::iterator beg = this->begin(), end = this->end();
 
         while ( beg != end){
+
         	*beg= u_char(255 - *beg);
 
         	++beg; 
@@ -213,6 +223,7 @@ using namespace std;
         return *this;
     }
 
+//I inserted this as it would not comile without explicitly declaring it here.
 namespace DHSDEA001{
 
     istream& operator >>(std::istream& file,Image& img){
@@ -247,12 +258,12 @@ namespace DHSDEA001{
 	}
 
 	ofstream& operator <<(std::ofstream& outFile,Image& img){
-
+		//Write out thenecessary lines at the top of the file.
 		outFile<<"P5"<<endl;
 		outFile<<"# This is a comment"<<endl;
 		outFile<< img.height<<" "<< img.width <<endl;
 		outFile<<"255"<<endl;
-
+		//Print the data to the file.s
 		outFile.write((char *) img.data.get(), img.height*img.width);
 
 	}
