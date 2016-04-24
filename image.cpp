@@ -20,7 +20,7 @@ using namespace std;
         height = i.height;
         unique_ptr<unsigned char []> temp (new unsigned char[i.width*i.height]);
         //Call the inbuilt move method.
-        data = std::move(temp);
+        data = move(temp);
 
         //Change the data for each entry, ie like a for loop but with iterators.
         Image::iterator beg = this->begin(), end = this->end();
@@ -38,7 +38,7 @@ using namespace std;
 	Image::Image(Image&& i) {
 		width = i.width;
         height = i.height;
-        data = std::move(i.data);
+        data = move(i.data);
         i.width = 0;
         i.height = 0;
         i.data = nullptr;
@@ -47,22 +47,20 @@ using namespace std;
 
 	//destructor
 	Image::~Image() {
-		data = nullptr;
 		height = 0;
 		width = 0;
+		data = nullptr;
 	}
 
 	//Copy assignment operator
 	Image& Image::operator=(const Image& other){
-		cout<<"Called"<<endl;
 
         width = other.width;
        	height = other.height;
-       	//data.reset(nullptr);
 
        	unique_ptr<unsigned char []> temp (new unsigned char[this->width*this->height]); 
 
-		this->data = std::move(temp);
+		this->data = move(temp);
 
 		Image::iterator beg = this->begin(), end = this->end();
 		Image::iterator inStart = other.begin(), inEnd = other.end();
@@ -84,29 +82,13 @@ using namespace std;
 
         height = other.height;
         width = other.width;
-        data = std::move(other.data);
+        data = move(other.data);
 
         other.width = 0;
         other.height = 0;
         other.data = nullptr;
         return *this;
     }
-
-
-    //Reading in from the file
-	void Image::load(string fileName) {
-		
-		//Checks if file can be opened.
-		ifstream file(fileName);
-		if(!file){
-			cerr << "File open failed!";
-		}
-		//Loads the file, using the overiden >> operator.
-		file >> *this;
-		
-
-		file.close();	
-	}
 
 	//Saving the image to a file.
 	void Image::save(string fileName){
@@ -123,6 +105,21 @@ using namespace std;
 		
 	}
 
+
+    //Reading in from the file
+	void Image::load(string fileName) {
+		
+		//Checks if file can be opened.
+		ifstream file(fileName);
+		if(!file){
+			cerr << "File open failed!";
+		}else{
+			//Loads the file, using the overiden >> operator.
+			file >> *this;
+		}
+
+		file.close();	
+	}
 
 	//Overiding the  + operator to allow the addition of images.
 	Image Image::operator+(const Image& image)const{
@@ -142,9 +139,9 @@ using namespace std;
                 int tempAddition = *beg + *inStart;
                 //if the value is more than 255 then  set it to 255 else set it to the addition of both images.
                 if (tempAddition <255){
-                	*beg = u_char(tempAddition);
+                	*inStart = u_char(tempAddition);
                 }else{
-                	*beg =u_char(255);
+                	*inStart =u_char(255);
                 } 
 
                 ++beg; 
@@ -152,7 +149,7 @@ using namespace std;
             }
         }
 
-        return copyLHS;
+        return copyRHS;
     }
 
     //Overiding the  - operator to allow the addition of images.
@@ -273,8 +270,7 @@ namespace DHSDEA001{
 		//Adds each piece of binary data to the array.
         file.read((char *) temp.get(), img.height*img.width);
 
-
-        img.data = std::move(temp);
+        img.data = move(temp);
 
         return file;
 	}
