@@ -28,6 +28,12 @@ namespace DHSDEA001 {
 			//move constructor
 			Image(Image&& i);
 
+			//copy assignment operator
+			Image & operator=(const Image & rhs);
+
+			//  move assignment operator
+			Image & operator=(Image && rhs);
+
 			//destructor
 			~Image();
 
@@ -51,7 +57,7 @@ namespace DHSDEA001 {
 			Image& operator*(int f);
 
 			friend std::istream & operator>>(std::istream& file, Image& img);
-			friend std::istream & operator<<(std::istream& file, Image& img);
+			friend std::ofstream & operator<<(std::ofstream& file, Image& img);
 
 	
 			//Iterator class
@@ -69,6 +75,7 @@ namespace DHSDEA001 {
 
 					//overide = operator.
 					// iterator& operator=(const iterator & rhs) {
+					// 	return *rhs;
 
 					// }	
 

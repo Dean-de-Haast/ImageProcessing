@@ -49,6 +49,37 @@ using namespace std;
 	}
 
 
+	Image& Image::operator=(const Image& other){
+
+		Image::iterator beg = this->begin(), end = this->end();
+		Image::iterator inStart = other.begin(), inEnd = other.end();
+
+        width = other.width;
+       	height = other.height;
+
+        std::unique_ptr<unsigned char []> temp (new unsigned char[other.width*other.height]);
+
+        data = std::move(temp);
+        while (beg != end){
+        	*beg=*inStart;
+        }
+        return *this;
+    }
+    
+    Image& Image::operator=(Image&& other){
+
+    	Image::iterator beg = this->begin(), end = this->end();
+		Image::iterator inStart = other.begin(), inEnd = other.end();
+
+        height = other.height;
+        data = std::move(other.data);
+        other.width = 0;
+        other.height = 0;
+        return *this;
+    }
+
+
+
 	void Image::load(string fileName) {
 		//Reading in from the file
 
@@ -69,10 +100,10 @@ using namespace std;
 		if(!outFile){
 			cerr << "File open failed!";
 		}
-		
+
 		outFile<< *this;
 
-		outFile.close;
+		outFile.close();
 		
 	}
 
@@ -215,14 +246,14 @@ namespace DHSDEA001{
         return file;
 	}
 
-	istream& operator <<(std::istream& file,Image& img){
+	ofstream& operator <<(std::ofstream& outFile,Image& img){
 
 		outFile<<"P5"<<endl;
 		outFile<<"# This is a comment"<<endl;
 		outFile<< img.height<<" "<< img.width <<endl;
 		outFile<<"255"<<endl;
 
-    	outFile.write((char *) data.get(), img.height*img.width);
+		outFile.write((char *) img.data.get(), img.height*img.width);
 
 	}
 }
