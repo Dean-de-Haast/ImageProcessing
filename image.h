@@ -49,6 +49,10 @@ namespace DHSDEA001 {
 			Image& operator/(const Image& image);
 			//Threshold.
 			Image& operator*(int f);
+
+			friend std::istream & operator>>(std::istream& file, Image& img);
+			friend std::istream & operator<<(std::istream& file, Image& img);
+
 	
 			//Iterator class
 			class iterator {
@@ -64,9 +68,9 @@ namespace DHSDEA001 {
 					iterator( const iterator & rhs) : ptr(rhs.ptr) {}
 
 					//overide = operator.
-					iterator& operator=(const iterator & rhs) {
+					// iterator& operator=(const iterator & rhs) {
 
-					}	
+					// }	
 
 					//overide ++ operator.
 					void operator++() {

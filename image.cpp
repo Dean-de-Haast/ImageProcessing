@@ -50,50 +50,16 @@ using namespace std;
 
 
 	void Image::load(string fileName) {
-		//Reading in from the file:
-		string str;
+		//Reading in from the file
 
 		ifstream file(fileName);
 		if(!file){
 			cerr << "File open failed!";
 		}
-		//Get rid of the first line.
-		getline(file,str);
-		//Get the next line, the first of the comment lines.
-		getline(file,str);
-		//Check whether the next lines are comment lines, if so skip them.
-		while(str[0] == '#'){
-			getline(file,str);
-		}
-		//Create a stringStream
-		stringstream parts(str);
-		//Read in all of the bytes into  the char array.	
-		parts >> height >> width >> ws;	
-
-		//Skip the line ith 255 on it.
-		getline(file,str);
+		file >> *this;
 		
-		//Reading in the data..
-		//Creating a new unsigned char array pointer.
-		unique_ptr<unsigned char []> temp(new unsigned char [height*width]);
-		
-		//Adds each piece of binary data to the array.
-
-		//****************************************MIGHT HAVE TO CHANGE THIS TO USING AN INTERATOR_ CURRENTLY USING A LIBRARY.
-		for (int i = 0; i < width*height; i++){
-        	file.read((char *) temp.get(), height*width);
-		}
-
-        data = std::move(temp);
-
-        //Printing out the input.
-  //       for (int i = 0; i < width*height; i++){
-  //       	cout<<data.get()[i]<<endl;
-		// }
 
 		file.close();	
-
-		//cout<<"THE HEIGHT IS: "<<height<<"THE WIDTH IS "<<width;
 	}
 
 	void Image::save(string fileName){
@@ -103,18 +69,13 @@ using namespace std;
 		if(!outFile){
 			cerr << "File open failed!";
 		}
-		outFile<<"P5"<<endl;
-		outFile<<"# This is a comment"<<endl;
-		outFile<< height<<" "<<width<<endl;
-		outFile<<"255"<<endl;
+		
+		outFile<< *this;
 
-		//****************************************MIGHT HAVE TO CHANGE THIS TO USING AN INTERATOR_ CURRENTLY USING A LIBRARY.
-    	outFile.write((char *) data.get(), height*width);
+		outFile.close;
+		
 	}
 
-	// Image& Image::add(Image& image){
-	// 	return this+image;
-	// }
 
 	//Overiding the  + operator to allow the addition of images.
 	Image& Image::operator+(const Image& image){
@@ -141,10 +102,6 @@ using namespace std;
             	++inStart; 
             }
         }
-
-        
-
-		
 
         return *this;
     }
@@ -175,6 +132,7 @@ using namespace std;
         return *this;
     }
 
+    //Overiding the ! operator.
     Image& Image::operator!(){
 
     	Image::iterator beg = this->begin(), end = this->end();
@@ -187,7 +145,7 @@ using namespace std;
         return *this;
     }
     
-    //***************************************************
+    //Overiding the / operator.
     Image& Image::operator/(const Image& image){
 
     	Image::iterator beg = this->begin(), end = this->end();
@@ -206,7 +164,8 @@ using namespace std;
         } 
         return *this;
     }
-    //*************************************************
+
+    //Overiding the * operator.
     Image& Image::operator*(int f){
 
     	Image::iterator beg = this->begin(), end = this->end();
@@ -222,3 +181,48 @@ using namespace std;
         }
         return *this;
     }
+
+namespace DHSDEA001{
+
+    istream& operator >>(std::istream& file,Image& img){
+    	string str;
+    	//Get rid of the first line.
+		getline(file,str);
+		//Get the next line, the first of the comment lines.
+		getline(file,str);
+		//Check whether the next lines are comment lines, if so skip them.
+		while(str[0] == '#'){
+			getline(file,str);
+		}
+		//Create a stringStream
+		stringstream parts(str);
+		//Read in all of the bytes into  the char array.	
+		parts >> img.height >> img.width >> ws;	
+
+		//Skip the line ith 255 on it.
+		getline(file,str);
+		
+		//Reading in the data..
+		//Creating a new unsigned char array pointer.
+		unique_ptr<unsigned char []> temp(new unsigned char [img.height*img.width]);
+		
+		//Adds each piece of binary data to the array.
+        file.read((char *) temp.get(), img.height*img.width);
+
+
+        img.data = std::move(temp);
+
+        return file;
+	}
+
+	istream& operator <<(std::istream& file,Image& img){
+
+		outFile<<"P5"<<endl;
+		outFile<<"# This is a comment"<<endl;
+		outFile<< img.height<<" "<< img.width <<endl;
+		outFile<<"255"<<endl;
+
+    	outFile.write((char *) data.get(), img.height*img.width);
+
+	}
+}
