@@ -46,7 +46,7 @@ namespace DHSDEA001 {
 
 			//Overiding the operators
 			//Addition.
-			Image& operator+(const Image& image);
+			Image operator+(const Image& image)const;
 			//Subtraction.
 			Image& operator-(const Image& image);
 			//Addition.
@@ -74,10 +74,10 @@ namespace DHSDEA001 {
 					iterator( const iterator & rhs) : ptr(rhs.ptr) {}
 
 					//overide = operator.
-					// iterator& operator=(const iterator & rhs) {
-					// 	return *rhs;
-
-					// }	
+					iterator& operator=(const iterator & rhs) {
+						ptr =rhs.ptr;
+						return *this;
+					}	
 
 					//overide ++ operator.
 					void operator++() {

@@ -21,6 +21,7 @@ using namespace DHSDEA001;
 	int threshold;
 
 	Image im,im2;
+	Image finalImage;
 	//Depending on what operation the user choses depends on what arguments are placed in different places.
 
 	//addition
@@ -30,7 +31,7 @@ using namespace DHSDEA001;
 		outputFile = argv[4];
 		im.load(inputFile1);
 		im2.load(inputFile2);
-		im+im2;
+		finalImage = im+im2;
 
 	//Subtraction
 	}else if (operation == "-s"){
@@ -67,6 +68,6 @@ using namespace DHSDEA001;
 		
 	}
 	//Save the image.
-	im.save(outputFile);
+	im2.save(outputFile);
 	return 0;
 }

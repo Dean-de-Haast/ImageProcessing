@@ -20,14 +20,16 @@ using namespace std;
         height = i.height;
         unique_ptr<unsigned char []> temp (new unsigned char[i.width*i.height]);
         //Call the inbuilt move method.
-        data = std::move(temp);
+        data = move(temp);
 
         //Change the data for each entry, ie like a for loop but with iterators.
         Image::iterator beg = this->begin(), end = this->end();
 		Image::iterator inStart = i.begin(), inEnd = i.end();
 
 		while ( beg != end){
-			*beg = *inStart; ++beg; ++inStart;
+			*beg = *inStart; 
+			++beg; 
+			++inStart;
 		} 
     }
 
@@ -35,11 +37,10 @@ using namespace std;
 	Image::Image(Image&& i) {
 		width = i.width;
         height = i.height;
-        data = std::move(i.data);
+        data = move(i.data);
         i.width = 0;
         i.height = 0;
-        i.data = nullptr;
-		
+        i.data = nullptr;		
 	}
 
 	//destructor
@@ -51,35 +52,34 @@ using namespace std;
 
 	//Copy assignment operator
 	Image& Image::operator=(const Image& other){
+		cout<<"Called"<<endl;
+
+        width = other.width;
+       	height = other.height;
+       	//data.reset(nullptr);
+
+       	unique_ptr<unsigned char []> temp (new unsigned char[this->width*this->height]); 
+
+		this->data = move(temp);
 
 		Image::iterator beg = this->begin(), end = this->end();
 		Image::iterator inStart = other.begin(), inEnd = other.end();
 
-        width = other.width;
-       	height = other.height;
-
-        std::unique_ptr<unsigned char []> temp (new unsigned char[other.width*other.height]);
-
-        data = std::move(temp);
-
        // USING ITERATORS
         while (beg != end){
-        	int temp =*inStart;
+        	*beg =*inStart;
         	++beg;
         	++inStart;
         }
-
 
         return *this;
     }
     
     //Assignment move operator
     Image& Image::operator=(Image&& other){
-       	Image::iterator beg = this->begin(), end = this->end();
-		Image::iterator inStart = other.begin(), inEnd = other.end();
-
         height = other.height;
-        data = std::move(other.data);
+        width = other.width;
+        data = move(other.data);
 
         other.width = 0;
         other.height = 0;
@@ -120,10 +120,14 @@ using namespace std;
 
 
 	//Overiding the  + operator to allow the addition of images.
-	Image& Image::operator+(const Image& image){
+	Image Image::operator+(const Image& image)const{
 
-		Image::iterator beg = this->begin(), end = this->end();
-		Image::iterator inStart = image.begin(), inEnd = image.end();
+		//Create two temp images.
+		Image copyLHS = *this;
+		Image copyRHS = image;
+
+		Image::iterator beg = copyLHS.begin(), end = copyLHS.end();
+		Image::iterator inStart = copyRHS.begin(), inEnd = copyRHS.end();
 		//Check whether the width of both images are the same.
 		//Use the iterator instead of this.
 		if(height ==image.height && width == image.width){
@@ -143,7 +147,7 @@ using namespace std;
             }
         }
 
-        return *this;
+        return copyLHS;
     }
 
     //Overiding the  + operator to allow the addition of images.
