@@ -20,13 +20,14 @@ using namespace std;
         height = i.height;
         unique_ptr<unsigned char []> temp (new unsigned char[i.width*i.height]);
         //Call the inbuilt move method.
-        data = move(temp);
+        data = std::move(temp);
 
         //Change the data for each entry, ie like a for loop but with iterators.
         Image::iterator beg = this->begin(), end = this->end();
 		Image::iterator inStart = i.begin(), inEnd = i.end();
 
 		while ( beg != end){
+			//cout<<"COPY@@@@@"<<endl;
 			*beg = *inStart; 
 			++beg; 
 			++inStart;
@@ -37,10 +38,11 @@ using namespace std;
 	Image::Image(Image&& i) {
 		width = i.width;
         height = i.height;
-        data = move(i.data);
+        data = std::move(i.data);
         i.width = 0;
         i.height = 0;
-        i.data = nullptr;		
+        i.data = nullptr;
+		
 	}
 
 	//destructor
@@ -60,7 +62,7 @@ using namespace std;
 
        	unique_ptr<unsigned char []> temp (new unsigned char[this->width*this->height]); 
 
-		this->data = move(temp);
+		this->data = std::move(temp);
 
 		Image::iterator beg = this->begin(), end = this->end();
 		Image::iterator inStart = other.begin(), inEnd = other.end();
@@ -77,9 +79,12 @@ using namespace std;
     
     //Assignment move operator
     Image& Image::operator=(Image&& other){
+       	Image::iterator beg = this->begin(), end = this->end();
+		Image::iterator inStart = other.begin(), inEnd = other.end();
+
         height = other.height;
         width = other.width;
-        data = move(other.data);
+        data = std::move(other.data);
 
         other.width = 0;
         other.height = 0;
@@ -150,11 +155,15 @@ using namespace std;
         return copyLHS;
     }
 
-    //Overiding the  + operator to allow the addition of images.
-	Image& Image::operator-(const Image& image){
+    //Overiding the  - operator to allow the addition of images.
+	Image Image::operator-(const Image& image)const{
 
-		Image::iterator beg = this->begin(), end = this->end();
-		Image::iterator inStart = image.begin(), inEnd = image.end();
+		//Create two temp images.
+		Image copyLHS = *this;
+		Image copyRHS = image;
+
+		Image::iterator beg = copyLHS.begin(), end = copyLHS.end();
+		Image::iterator inStart = copyRHS.begin(), inEnd = copyRHS.end();
 		//Check whether the width of both images are the same.
 		
 		if(height ==image.height && width == image.width){
@@ -173,13 +182,15 @@ using namespace std;
             	++inStart; 
             }
         }
-        return *this;
+        return copyLHS;
     }
 
     //Overiding the ! operator.
-    Image& Image::operator!(){
+    Image Image::operator!()const{
 
-    	Image::iterator beg = this->begin(), end = this->end();
+    	Image copyLHS = *this;
+
+    	Image::iterator beg = copyLHS.begin(), end = copyLHS.end();
 
         while ( beg != end){
 
@@ -187,14 +198,18 @@ using namespace std;
 
         	++beg; 
         } 
-        return *this;
+        return copyLHS;
     }
     
     //Overiding the / operator.
-    Image& Image::operator/(const Image& image){
+    Image Image::operator/(const Image& image)const{
 
-    	Image::iterator beg = this->begin(), end = this->end();
-		Image::iterator inStart = image.begin(), inEnd = image.end();
+    	//Create two temp images.
+		Image copyLHS = *this;
+		Image copyRHS = image;
+
+    	Image::iterator beg = copyLHS.begin(), end = copyLHS.end();
+		Image::iterator inStart = copyRHS.begin(), inEnd = copyRHS.end();
 
         if(width == image.width && height==image.height){
 	        while ( beg != end){
@@ -207,13 +222,16 @@ using namespace std;
             	++inStart; 	
 	        }
         } 
-        return *this;
+        return copyLHS;
     }
 
     //Overiding the * operator.
-    Image& Image::operator*(int f){
+    Image Image::operator*(int f)const{
 
-    	Image::iterator beg = this->begin(), end = this->end();
+    	//Create two temp images.
+		Image copyLHS = *this;
+
+    	Image::iterator beg = copyLHS.begin(), end = copyLHS.end();
 
         while ( beg != end){
 
@@ -224,7 +242,7 @@ using namespace std;
             } 
             ++beg; 
         }
-        return *this;
+        return copyLHS;
     }
 
 //I inserted this as it would not comile without explicitly declaring it here.

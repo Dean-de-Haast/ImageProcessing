@@ -40,14 +40,14 @@ using namespace DHSDEA001;
 		outputFile = argv[4];
 		im.load(inputFile1);
 		im2.load(inputFile2);
-		im-im2;
+		finalImage = im-im2;
 
 	//Inverse
 	}else if (operation == "-i"){
 		inputFile1 = argv[2];
 		outputFile = argv[3];
 		im.load(inputFile1);
-		!im;
+		finalImage = !im;
 
 	//Mask
 	}else if (operation == "-l"){
@@ -56,7 +56,7 @@ using namespace DHSDEA001;
 		outputFile = argv[4];
 		im.load(inputFile1);
 		im2.load(inputFile2);
-		im/im2;
+		finalImage = im/im2;
 		
 	//Threshold
 	}else if (operation == "-t"){
@@ -64,10 +64,10 @@ using namespace DHSDEA001;
 		threshold = atoi(argv[3]);
 		outputFile = argv[4];
 		im.load(inputFile1);
-		im*threshold;
+		finalImage = im*threshold;
 		
 	}
 	//Save the image.
-	im2.save(outputFile);
+	finalImage.save(outputFile);
 	return 0;
 }

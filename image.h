@@ -48,13 +48,13 @@ namespace DHSDEA001 {
 			//Addition.
 			Image operator+(const Image& image)const;
 			//Subtraction.
-			Image& operator-(const Image& image);
+			Image operator-(const Image& image) const;
 			//Addition.
-			Image& operator!();
+			Image operator!() const;
 			//Mask.
-			Image& operator/(const Image& image);
+			Image operator/(const Image& image)const;
 			//Threshold.
-			Image& operator*(int f);
+			Image operator*(int f) const;
 
 			friend std::istream & operator>>(std::istream& file, Image& img);
 			friend std::ofstream & operator<<(std::ofstream& file, Image& img);
