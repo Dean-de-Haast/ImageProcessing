@@ -23,9 +23,9 @@ using namespace DHSDEA001;
 	Image im,im2;
 	Image finalImage;
 	//Depending on what operation the user choses depends on what arguments are placed in different places.
+	operation = operation[1];
 
-	//addition
-	if (operation == "-a"){
+	if (operation == "a"){
 		inputFile1 = argv[2];
 		inputFile2 = argv[3];
 		outputFile = argv[4];
@@ -34,7 +34,7 @@ using namespace DHSDEA001;
 		finalImage = im+im2;
 
 	//Subtraction
-	}else if (operation == "-s"){
+	}else if (operation == "s"){
 		inputFile1 = argv[2];
 		inputFile2 = argv[3];
 		outputFile = argv[4];
@@ -43,14 +43,14 @@ using namespace DHSDEA001;
 		finalImage = im-im2;
 
 	//Inverse
-	}else if (operation == "-i"){
+	}else if (operation == "i"){
 		inputFile1 = argv[2];
 		outputFile = argv[3];
 		im.load(inputFile1);
 		finalImage = !im;
 
 	//Mask
-	}else if (operation == "-l"){
+	}else if (operation == "l"){
 		inputFile1 = argv[2];
 		inputFile2 = argv[3];
 		outputFile = argv[4];
@@ -59,7 +59,7 @@ using namespace DHSDEA001;
 		finalImage = im/im2;
 		
 	//Threshold
-	}else if (operation == "-t"){
+	}else if (operation == "t"){
 		inputFile1 = argv[2];
 		threshold = atoi(argv[3]);
 		outputFile = argv[4];

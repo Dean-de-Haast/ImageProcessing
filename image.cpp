@@ -16,22 +16,23 @@ using namespace std;
 
 	//copy constructor
 	Image::Image(const Image& i){
-        width = i.width;
-        height = i.height;
-        unique_ptr<unsigned char []> temp (new unsigned char[i.width*i.height]);
-        //Call the inbuilt move method.
-        data = move(temp);
+		if(this != &i){
+	        width = i.width;
+	        height = i.height;
+	        unique_ptr<unsigned char []> temp (new unsigned char[i.width*i.height]);
+	        //Call the inbuilt move method.
+	        data = move(temp);
 
-        //Change the data for each entry, ie like a for loop but with iterators.
-        Image::iterator beg = this->begin(), end = this->end();
-		Image::iterator inStart = i.begin(), inEnd = i.end();
+	        //Change the data for each entry, ie like a for loop but with iterators.
+	        Image::iterator beg = this->begin(), end = this->end();
+			Image::iterator inStart = i.begin(), inEnd = i.end();
 
-		while ( beg != end){
-			//cout<<"COPY@@@@@"<<endl;
-			*beg = *inStart; 
-			++beg; 
-			++inStart;
-		} 
+			while ( beg != end){
+				*beg = *inStart; 
+				++beg; 
+				++inStart;
+			}
+		}
     }
 
 	//move constructor
@@ -54,25 +55,26 @@ using namespace std;
 
 	//Copy assignment operator
 	Image& Image::operator=(const Image& other){
+		if(this != &other){
+	        width = other.width;
+	       	height = other.height;
 
-        width = other.width;
-       	height = other.height;
+	       	unique_ptr<unsigned char []> temp (new unsigned char[width*height]); 
 
-       	unique_ptr<unsigned char []> temp (new unsigned char[this->width*this->height]); 
+			data = move(temp);
 
-		this->data = move(temp);
+			Image::iterator beg = this->begin(), end = this->end();
+			Image::iterator inStart = other.begin(), inEnd = other.end();
 
-		Image::iterator beg = this->begin(), end = this->end();
-		Image::iterator inStart = other.begin(), inEnd = other.end();
+	       // USING ITERATORS
+	        while(beg != end){
+	        	*beg =*inStart;
+	        	++beg;
+	        	++inStart;
+	        }
 
-       // USING ITERATORS
-        while (beg != end){
-        	*beg =*inStart;
-        	++beg;
-        	++inStart;
-        }
-
-        return *this;
+	        return *this;
+    	}else return *this;
     }
     
     //Assignment move operator
@@ -101,8 +103,7 @@ using namespace std;
 		//Saves the file, using the overiden << operator.
 		outFile<< *this;
 
-		outFile.close();
-		
+		outFile.close();	
 	}
 
 
@@ -134,7 +135,7 @@ using namespace std;
 		//Use the iterator instead of this.
 		if(height ==image.height && width == image.width){
 
-            while ( beg != end){ 
+            while(inStart != inEnd){ 
 
                 int tempAddition = *beg + *inStart;
                 //if the value is more than 255 then  set it to 255 else set it to the addition of both images.
@@ -165,21 +166,21 @@ using namespace std;
 		
 		if(height ==image.height && width == image.width){
 
-			while ( beg != end){ 
+			while(inStart != inEnd){ 
 
                 int tempAddition = *beg - *inStart;
                 //Subtract the value if the total is bigger than 0 else set it to 0.
                 if (tempAddition >0){
-                	*beg = u_char(tempAddition);
+                	*inStart = u_char(tempAddition);
                 }else{
-                	*beg =u_char(0);
+                	*inStart =u_char(0);
                 } 
 
                 ++beg; 
             	++inStart; 
             }
         }
-        return copyLHS;
+        return copyRHS;
     }
 
     //Overiding the ! operator.
@@ -189,16 +190,14 @@ using namespace std;
 
     	Image::iterator beg = copyLHS.begin(), end = copyLHS.end();
 
-        while ( beg != end){
-
+        while(beg != end){
         	*beg= u_char(255 - *beg);
-
         	++beg; 
         } 
         return copyLHS;
     }
     
-    //Overiding the / operator.
+    //Overiding the / operator. Takes in a mask as image 2
     Image Image::operator/(const Image& image)const{
 
     	//Create two temp images.
@@ -209,9 +208,9 @@ using namespace std;
 		Image::iterator inStart = copyRHS.begin(), inEnd = copyRHS.end();
 
         if(width == image.width && height==image.height){
-	        while ( beg != end){
-
-	        	if(*beg!=255){
+	        while(beg != end){
+	        	//If value mask != 255 then change output image to 0
+	        	if(*inStart!=255){ 
 	        		*beg = u_char(0);		
 	        	}   
 
@@ -230,7 +229,7 @@ using namespace std;
 
     	Image::iterator beg = copyLHS.begin(), end = copyLHS.end();
 
-        while ( beg != end){
+        while(beg != end){
 
             if(*beg > f){
             	*beg = u_char(255);
@@ -245,7 +244,7 @@ using namespace std;
 //I inserted this as it would not comile without explicitly declaring it here.
 namespace DHSDEA001{
 
-    istream& operator >>(std::istream& file,Image& img){
+    void operator >>(std::istream& file,Image& img){
     	string str;
     	//Get rid of the first line.
 		getline(file,str);
@@ -271,16 +270,11 @@ namespace DHSDEA001{
         file.read((char *) temp.get(), img.height*img.width);
 
         img.data = move(temp);
-
-        return file;
 	}
 
-	ofstream& operator <<(std::ofstream& outFile,Image& img){
+	void operator <<(std::ofstream& outFile,Image& img){
 		//Write out thenecessary lines at the top of the file.
-		outFile<<"P5"<<endl;
-		outFile<<"# This is a comment"<<endl;
-		outFile<< img.height<<" "<< img.width <<endl;
-		outFile<<"255"<<endl;
+		outFile<<"P5"<<"\n"<<"# This is a comment"<<"\n"<<img.height<<" "<< img.width<<"\n"<<"255"<<endl;
 		//Print the data to the file.s
 		outFile.write((char *) img.data.get(), img.height*img.width);
 

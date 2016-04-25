@@ -56,8 +56,8 @@ namespace DHSDEA001 {
 			//Threshold.
 			Image operator*(int f) const;
 
-			friend std::istream & operator>>(std::istream& file, Image& img);
-			friend std::ofstream & operator<<(std::ofstream& file, Image& img);
+			friend void operator>>(std::istream& file, Image& img);
+			friend void operator<<(std::ofstream& file, Image& img);
 
 	
 			//Iterator class
